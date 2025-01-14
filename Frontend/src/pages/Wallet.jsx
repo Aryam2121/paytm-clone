@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 const Wallet = () => {
   const [balance, setBalance] = useState(5000); // Mock balance
   const [transactions, setTransactions] = useState([]);
+  const [customAmount, setCustomAmount] = useState('');
+  const [withdrawAmount, setWithdrawAmount] = useState('');
+  const [showConfirmWithdraw, setShowConfirmWithdraw] = useState(false);
   const targetBalance = 10000; // Mock target balance
 
   const addTransaction = (amount, type) => {
@@ -21,10 +24,12 @@ const Wallet = () => {
     addTransaction(amount, "Deposit");
   };
 
-  const handleWithdraw = (amount) => {
-    if (balance - amount >= 0) {
-      setBalance(balance - amount);
-      addTransaction(amount, "Withdraw");
+  const handleWithdraw = () => {
+    if (parseFloat(withdrawAmount) <= balance) {
+      setBalance(balance - parseFloat(withdrawAmount));
+      addTransaction(parseFloat(withdrawAmount), "Withdraw");
+      setWithdrawAmount(''); // Reset withdraw amount
+      setShowConfirmWithdraw(false); // Close confirmation
     } else {
       alert("Insufficient balance!");
     }
@@ -35,9 +40,9 @@ const Wallet = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 to-indigo-100 p-6 flex flex-col items-center">
       <motion.div
-        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md"
-        initial={{ opacity: 0}}
-        animate={{ opacity: 1}}
+        className="bg-white rounded-lg shadow-lg p-6 w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
         {/* Wallet Balance */}
@@ -65,7 +70,7 @@ const Wallet = () => {
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Deposit and Withdraw Buttons */}
         <div className="flex justify-between mt-6">
           <motion.button
             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow-md"
@@ -77,20 +82,62 @@ const Wallet = () => {
           </motion.button>
           <motion.button
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md"
-            onClick={() => handleWithdraw(1000)}
+            onClick={() => setShowConfirmWithdraw(true)}
             whileHover={{ scale: 1.1 }}
             transition={{ delay: 0.2 }}
           >
-            Withdraw ₹1000
+            Withdraw ₹
+          </motion.button>
+        </div>
+
+        {/* Custom Deposit */}
+        <div className="mt-6 flex justify-between items-center">
+          <input
+            type="number"
+            className="border rounded-lg p-2 w-full max-w-xs"
+            placeholder="Enter custom amount"
+            value={customAmount}
+            onChange={(e) => setCustomAmount(e.target.value)}
+          />
+          <motion.button
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md ml-4"
+            onClick={() => {
+              if (customAmount) {
+                handleDeposit(parseInt(customAmount));
+                setCustomAmount('');
+              }
+            }}
+            whileHover={{ scale: 1.1 }}
+          >
+            Deposit
+          </motion.button>
+        </div>
+
+        {/* Deposit via UPI or Card */}
+        <div className="mt-6 space-y-4">
+          <motion.button
+            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow-md w-full"
+            onClick={() => handleDeposit(5000)} // Mock deposit via UPI
+            whileHover={{ scale: 1.1 }}
+          >
+            Deposit via UPI ₹5000
+          </motion.button>
+
+          <motion.button
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md w-full"
+            onClick={() => handleDeposit(10000)} // Mock deposit via Card
+            whileHover={{ scale: 1.1 }}
+          >
+            Deposit via Card ₹10000
           </motion.button>
         </div>
       </motion.div>
 
       {/* Transaction History */}
       <motion.div
-        className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mt-8"
+        className="bg-white rounded-lg shadow-lg p-6 w-full mt-8"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1}}
+        animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.8 }}
       >
         <h3 className="text-xl font-semibold text-gray-800">Transaction History</h3>
@@ -118,6 +165,48 @@ const Wallet = () => {
           <p className="mt-4 text-gray-500">No transactions yet.</p>
         )}
       </motion.div>
+
+      {/* Withdraw Confirmation Modal */}
+      {showConfirmWithdraw && (
+        <motion.div
+          className="fixed inset-0 flex justify-center items-center bg-gray-700 bg-opacity-50 z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.div
+            className="bg-white p-6 rounded-lg shadow-md w-80"
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <h4 className="text-lg font-semibold text-gray-800">Enter Withdraw Amount</h4>
+            <input
+              type="number"
+              className="border rounded-lg p-2 w-full mt-4"
+              placeholder="Enter amount to withdraw"
+              value={withdrawAmount}
+              onChange={(e) => setWithdrawAmount(e.target.value)}
+            />
+            <div className="mt-4 flex justify-between">
+              <motion.button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={() => setShowConfirmWithdraw(false)}
+                whileHover={{ scale: 1.1 }}
+              >
+                Cancel
+              </motion.button>
+              <motion.button
+                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={handleWithdraw}
+                whileHover={{ scale: 1.1 }}
+              >
+                Confirm
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };

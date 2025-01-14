@@ -93,7 +93,7 @@ const Header = () => {
             <motion.div
               className={`absolute right-0 mt-2 ${
                 darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-800"
-              } rounded-lg shadow-lg w-48`}
+              } rounded-lg shadow-lg w-48 scale-95 origin-top transition-all duration-300`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
@@ -118,7 +118,7 @@ const Header = () => {
           onClick={toggleDarkMode}
           className={`${
             darkMode ? "bg-yellow-500 text-gray-800" : "bg-gray-800 text-white"
-          } p-2 rounded-full shadow-md`}
+          } p-2 rounded-full shadow-md transition-all duration-300 ease-in-out transform`}
           whileHover={{ scale: 1.1 }}
         >
           {darkMode ? "🌞" : "🌙"}
@@ -144,7 +144,7 @@ const Header = () => {
             darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
           } shadow-lg z-50 p-4`}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1}}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
           <ul className="space-y-4 text-lg font-medium">

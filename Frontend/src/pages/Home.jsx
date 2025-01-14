@@ -258,12 +258,12 @@ const Home = () => {
   <FaQrcode className="text-4xl text-teal-500" />
   <h3 className="text-xl font-semibold mt-4">QR Code Payments</h3>
   <p className="text-gray-500">Pay easily using QR codes.</p>
-  {/* <Link
-    to="/qr-payments"
+  <Link
+    to="/qr-scanner"
     className="mt-4 bg-teal-600 text-white py-2 px-4 rounded-full hover:bg-teal-700 transition duration-200"
   >
     Use QR Code
-  </Link> */}
+  </Link>
 </motion.div>
         </div>
 
